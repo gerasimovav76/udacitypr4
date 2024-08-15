@@ -1,5 +1,5 @@
 {
-	"name": "ds_EmpMaster",
+	"name": "ds_dl_EmpMaster",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorageData",

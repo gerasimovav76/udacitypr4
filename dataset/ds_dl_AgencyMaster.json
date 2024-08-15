@@ -1,5 +1,5 @@
 {
-	"name": "ds_AgencyMaster",
+	"name": "ds_dl_AgencyMaster",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorageData",
