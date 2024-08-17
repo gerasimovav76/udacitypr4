@@ -25,7 +25,7 @@
 			"scriptLines": [
 				"source(output(",
 				"          FiscalYear as integer,",
-				"          PayrollNumber as string,",
+				"          PayrollNumber as integer,",
 				"          AgencyCode as string,",
 				"          AgencyName as string,",
 				"          EmployeeID as string,",
