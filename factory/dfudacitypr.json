@@ -1,9 +1,9 @@
 {
 	"name": "dfudacitypr",
-	"location": "eastus",
+	"location": "northeurope",
 	"identity": {
 		"type": "SystemAssigned",
-		"principalId": "4f5b747a-fc9d-4912-af8f-0bc34bd382cc",
-		"tenantId": "f958e84a-92b8-439f-a62d-4f45996b6d07"
+		"principalId": "ef817a7c-209a-45fd-9780-61a2e06b534e",
+		"tenantId": "c59b4a3c-0444-418a-bf4a-721163b3061f"
 	}
 }
