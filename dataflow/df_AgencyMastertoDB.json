@@ -1,31 +1,33 @@
 {
-	"name": "df_TitleMastertoDB_copy1",
+	"name": "df_AgencyMastertoDB",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_dl_TitleMaster",
+						"referenceName": "ds_dl_AgencyMaster",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "source1",
+					"description": "Import data from ds_dl_AgencyMaster"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sqldb_NYCPayrollTITLEMD",
+						"referenceName": "ds_sqldb_NYCPayrollAgencyMD",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink1",
+					"description": "Export data to ds_sqldb_NYCPayrollAgencyMD"
 				}
 			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          TitleCode as string,",
-				"          TitleDescription as string",
+				"          AgencyID as string,",
+				"          AgencyName as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: true,",
@@ -34,8 +36,8 @@
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: true,",
 				"     input(",
-				"          TitleCode as string,",
-				"          TitleDescription as string",
+				"          AgencyID as string,",
+				"          AgencyName as string",
 				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
