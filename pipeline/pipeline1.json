@@ -159,6 +159,46 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "Dataflow Summary",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "df_nycpayroll2021toDB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "df_nycpayroll2020toDB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "Dataflow Summary",
+						"type": "DataFlowReference",
+						"parameters": {
+							"dataflow_param_fiscalyear": "2020"
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
