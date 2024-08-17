@@ -19,8 +19,7 @@
 						"referenceName": "ds_sqldb_NYCPayrollEMPMD",
 						"type": "DatasetReference"
 					},
-					"name": "sink1",
-					"description": "Export data to ds_sqldb_NYCEmpMasterMD"
+					"name": "sink1"
 				}
 			],
 			"transformations": [],
