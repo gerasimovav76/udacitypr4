@@ -9,14 +9,22 @@
 						"referenceName": "ds_sqldb_NYCPayrollData2020",
 						"type": "DatasetReference"
 					},
-					"name": "SQLDB2000"
+					"name": "SQLDB2020"
 				},
 				{
-					"name": "source1"
+					"dataset": {
+						"referenceName": "ds_sqldb_NYCPayrollData2021",
+						"type": "DatasetReference"
+					},
+					"name": "SQLDB2021"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          AgencyID as string,",
@@ -25,9 +33,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> SQLDB2000",
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1"
+				"     format: 'table') ~> SQLDB2020",
+				"source(output(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SQLDB2021",
+				"SQLDB2020 union(byName: true)~> union1"
 			]
 		}
 	}
