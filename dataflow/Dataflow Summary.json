@@ -28,6 +28,10 @@
 					"name": "sink1"
 				},
 				{
+					"dataset": {
+						"referenceName": "ds_sqldb_NYCPayrollSummary",
+						"type": "DatasetReference"
+					},
 					"name": "sink2"
 				}
 			],
@@ -47,7 +51,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     dataflow_param_fiscalyear as integer (2020||2021)",
+				"     dataflow_param_fiscalyear as integer (2020)",
 				"}",
 				"source(output(",
 				"          FiscalYear as integer,",
@@ -115,8 +119,19 @@
 				"     format: 'table') ~> sink1",
 				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          FiscalYear as integer,",
+				"          AgencyName as string,",
+				"          TotalPaid as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink2"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
 			]
 		}
 	}
