@@ -8,23 +8,14 @@
 		"AzureDataLakeStorageData_accountKey": {
 			"value": ""
 		},
-		"AzureSqlDatabase1_password": {
+		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
 		"AzureSqlDatabase2_password": {
 			"value": ""
 		},
 		"AzureDataLakeStorageData_properties_typeProperties_url": {
-			"value": "https://adlsnycpayrolantong.dfs.core.windows.net/"
-		},
-		"AzureSqlDatabase1_properties_typeProperties_server": {
-			"value": "sqlsrvnycpayrol.database.windows.net"
-		},
-		"AzureSqlDatabase1_properties_typeProperties_database": {
-			"value": "db_nycpayroll"
-		},
-		"AzureSqlDatabase1_properties_typeProperties_userName": {
-			"value": "gavexe"
+			"value": "https://adlsnycpayrollantong.dfs.core.windows.net/"
 		},
 		"AzureSqlDatabase2_properties_typeProperties_server": {
 			"value": "synapceudacitypr-ondemand.sql.azuresynapse.net"
