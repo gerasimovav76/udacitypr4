@@ -9,11 +9,11 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "AgencyID",
+				"name": "TitleCode",
 				"type": "varchar"
 			},
 			{
-				"name": "AgencyName",
+				"name": "TitleDescription",
 				"type": "varchar"
 			}
 		],
