@@ -63,7 +63,11 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          AgencyID = AgencyCode,",
+				"          AgencyName",
+				"     )) ~> sink1"
 			]
 		}
 	}
