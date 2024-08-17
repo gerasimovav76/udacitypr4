@@ -28,7 +28,7 @@
 					"name": "filter1"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "TotalPaid"
 				}
 			],
 			"scriptLines": [
@@ -87,7 +87,7 @@
 				"     format: 'table') ~> SQLDB2021",
 				"SQLDB2020, SQLDB2021 union(byName: true)~> union1",
 				"union1 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> filter1",
-				"filter1 derive(TotalPaid = RegularGrossPaid + TotalOTPaid+TotalOtherPay) ~> derivedColumn1"
+				"filter1 derive(TotalPaid = RegularGrossPaid + TotalOTPaid + TotalOtherPay) ~> TotalPaid"
 			]
 		}
 	}
