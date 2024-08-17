@@ -15,7 +15,7 @@
 			"value": ""
 		},
 		"AzureDataLakeStorageData_properties_typeProperties_url": {
-			"value": "https://adlsnycpayrollantong.dfs.core.windows.net/"
+			"value": "https://adlsnycpayrolantong.dfs.core.windows.net/"
 		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"value": "sqlsrvnycpayrol.database.windows.net"

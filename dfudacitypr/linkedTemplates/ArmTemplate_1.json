@@ -268,7 +268,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/df_TitleMastertoDB_copy1')]",
+			"name": "[concat(parameters('factoryName'), '/df_EmpMastertoDB')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -277,7 +277,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ds_dl_TitleMaster",
+								"referenceName": "ds_dl_EmpMaster",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -286,7 +286,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_sqldb_NYCPayrollTITLEMD",
+								"referenceName": "ds_sqldb_NYCPayrollEMPMD",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -295,8 +295,9 @@
 					"transformations": [],
 					"scriptLines": [
 						"source(output(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: true,",
@@ -305,8 +306,9 @@
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: true,",
 						"     input(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
 						"     ),",
 						"     deletable:false,",
 						"     insertable:true,",

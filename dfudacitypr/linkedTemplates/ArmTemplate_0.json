@@ -21,7 +21,7 @@
 		},
 		"AzureDataLakeStorageData_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://adlsnycpayrollantong.dfs.core.windows.net/"
+			"defaultValue": "https://adlsnycpayrolantong.dfs.core.windows.net/"
 		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"type": "string",
