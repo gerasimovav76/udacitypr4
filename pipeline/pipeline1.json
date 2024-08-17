@@ -89,6 +89,12 @@
 						"dependencyConditions": [
 							"Completed"
 						]
+					},
+					{
+						"activity": "df_EmpMastertoDB",
+						"dependencyConditions": [
+							"Completed"
+						]
 					}
 				],
 				"policy": {
@@ -120,6 +126,18 @@
 						"dependencyConditions": [
 							"Completed"
 						]
+					},
+					{
+						"activity": "df_AgencyMastertoDB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "df_TitleMastertoDB",
+						"dependencyConditions": [
+							"Completed"
+						]
 					}
 				],
 				"policy": {
@@ -145,7 +163,20 @@
 			{
 				"name": "Dataflow Summary",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "df_nycpayroll2021toDB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "df_nycpayroll2020toDB",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
