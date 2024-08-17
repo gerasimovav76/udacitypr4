@@ -7,16 +7,7 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [
-			{
-				"name": "AgencyID",
-				"type": "varchar"
-			},
-			{
-				"name": "AgencyName",
-				"type": "varchar"
-			}
-		],
+		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
 			"table": "NYC_Payroll_Data_2021"
