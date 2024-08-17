@@ -6,29 +6,28 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "ds_dl_EmpMaster",
+						"referenceName": "ds_dl_TitleMaster",
 						"type": "DatasetReference"
 					},
 					"name": "source1",
-					"description": "Import data from ds_dl_Title"
+					"description": "Import data from ds_dl_TitleMD"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_sqldb_NYCPayrollEMPMD",
+						"referenceName": "ds_dl_TitleMaster",
 						"type": "DatasetReference"
 					},
 					"name": "sink1",
-					"description": "Export data to ds_sqldb_NYCEmpMasterMD"
+					"description": "Export data to ds_sqldb_NYCTitleMD"
 				}
 			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          EmployeeID as string,",
-				"          LastName as string,",
-				"          FirstName as string",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -36,17 +35,15 @@
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          AgencyID as string,",
-				"          AgencyName as string",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
 				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     format: 'table') ~> sink1"
 			]
 		}
 	}
