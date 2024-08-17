@@ -1451,53 +1451,6 @@
 							},
 							"traceLevel": "Fine"
 						}
-					},
-					{
-						"name": "Dataflow Summary",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "df_nycpayroll2020toDB",
-								"dependencyConditions": [
-									"Completed"
-								]
-							},
-							{
-								"activity": "df_nycpayroll2021toDB",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Dataflow Summary",
-								"type": "DataFlowReference",
-								"parameters": {
-									"dataflow_param_fiscalyear": "2020"
-								},
-								"datasetParameters": {
-									"source1": {},
-									"source2": {},
-									"sink1": {},
-									"sink2": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
 					}
 				],
 				"policy": {
@@ -1510,8 +1463,7 @@
 				"[concat(variables('factoryId'), '/dataflows/df_EmpMastertoDB')]",
 				"[concat(variables('factoryId'), '/dataflows/df_TitleMastertoDB')]",
 				"[concat(variables('factoryId'), '/dataflows/df_nycpayroll2020toDB')]",
-				"[concat(variables('factoryId'), '/dataflows/df_nycpayroll2021toDB')]",
-				"[concat(variables('factoryId'), '/dataflows/Dataflow Summary')]"
+				"[concat(variables('factoryId'), '/dataflows/df_nycpayroll2021toDB')]"
 			]
 		},
 		{
