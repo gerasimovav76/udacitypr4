@@ -1,5 +1,5 @@
 {
-	"name": "df_TitleMastertoDB_copy1",
+	"name": "df_EmpMastertoDB",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
