@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageData'"
 		},
-		"AzureSqlDatabase1_connectionString": {
+		"AzureSqlDatabase1_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
 		"AzureSqlDatabase2_password": {
 			"type": "secureString",
@@ -21,7 +21,19 @@
 		},
 		"AzureDataLakeStorageData_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://adlsnycpayrollantong.dfs.core.windows.net/"
+			"defaultValue": "https://adlsnycpayrolantong.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlsrvnycpayrol.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_nycpayroll"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "gavexe"
 		},
 		"AzureSqlDatabase2_properties_typeProperties_server": {
 			"type": "string",
@@ -40,6 +52,52 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_dl2sql')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_nycpayroll2020toDB",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_nycpayroll2020toDB",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_nycpayroll2020toDB')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ds_dl_AgencyMaster')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -371,6 +429,42 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_extsqldb_NYCPayrollSummary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "FiscalYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgencyName",
+						"type": "varchar"
+					},
+					{
+						"name": "TotalPaid",
+						"type": "float",
+						"precision": 15
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "NYC_Payroll_Summary"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_sqldb_NYCPayrollAgencyMD')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -575,7 +669,16 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+					"server": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -598,6 +701,283 @@
 						"type": "SecureString",
 						"value": "[parameters('AzureSqlDatabase2_password')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_AgencyMastertoDB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dl_AgencyMaster",
+								"type": "DatasetReference"
+							},
+							"name": "source1",
+							"description": "Import data from ds_dl_AgencyMaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYCPayrollAgencyMD",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to ds_sqldb_NYCPayrollAgencyMD"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_dl_AgencyMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYCPayrollAgencyMD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_EmpMastertoDB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dl_EmpMaster",
+								"type": "DatasetReference"
+							},
+							"name": "source1",
+							"description": "Import data from ds_dl_EmpMaster"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYCPayrollEMPMD",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to ds_sqldb_NYCEmpMasterMD"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_dl_EmpMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYCPayrollEMPMD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_nycpayroll2020toDB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dl_nycpayroll_2020",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYCPayrollData2020",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          FiscalYear as string,",
+						"          PayrollNumber as string,",
+						"          AgencyCode as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as string,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as string,",
+						"          PayBasis as string,",
+						"          RegularHours as string,",
+						"          RegularGrossPaid as string,",
+						"          OTHours as string,",
+						"          TotalOTPaid as string,",
+						"          TotalOtherPay as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_dl_nycpayroll_2020')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYCPayrollData2020')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_nycpayroll2021toDB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dl_nycpayroll_2021",
+								"type": "DatasetReference"
+							},
+							"name": "source1",
+							"description": "Import data from ds_dl_nycpayroll_2021"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_NYCPayrollData2021",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to ds_sqldb_NYCPayrollData2021"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          FiscalYear as string,",
+						"          PayrollNumber as string,",
+						"          AgencyCode as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as string,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as string,",
+						"          PayBasis as string,",
+						"          RegularHours as string,",
+						"          RegularGrossPaid as string,",
+						"          OTHours as string,",
+						"          TotalOTPaid as string,",
+						"          TotalOtherPay as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          AgencyID as string,",
+						"          AgencyName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_dl_nycpayroll_2021')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYCPayrollData2021')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/credential1')]",
+			"type": "Microsoft.DataFactory/factories/credentials",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "UserAuth",
+				"typeProperties": {
+					"token": "redacted"
 				}
 			},
 			"dependsOn": []
