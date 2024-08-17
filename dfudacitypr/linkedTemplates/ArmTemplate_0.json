@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageData'"
 		},
-		"AzureSqlDatabase1_connectionString": {
+		"AzureSqlDatabase1_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
 		"AzureSqlDatabase2_password": {
 			"type": "secureString",
@@ -22,6 +22,18 @@
 		"AzureDataLakeStorageData_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsnycpayrollantong.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlsrvnycpayrol.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_nycpayroll"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "gavexe"
 		},
 		"AzureSqlDatabase2_properties_typeProperties_server": {
 			"type": "string",
@@ -65,7 +77,16 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+					"server": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -1023,7 +1044,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/df_TitleMastertoDB')]",
+			"name": "[concat(parameters('factoryName'), '/df_AgencyMastertoDB')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1032,26 +1053,28 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ds_dl_TitleMaster",
+								"referenceName": "ds_dl_AgencyMaster",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "source1",
+							"description": "Import data from ds_dl_AgencyMaster"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_sqldb_NYCPayrollTITLEMD",
+								"referenceName": "ds_sqldb_NYCPayrollAgencyMD",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "sink1",
+							"description": "Export data to ds_sqldb_NYCPayrollAgencyMD"
 						}
 					],
 					"transformations": [],
 					"scriptLines": [
 						"source(output(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
+						"          AgencyID as string,",
+						"          AgencyName as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: true,",
@@ -1060,8 +1083,8 @@
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: true,",
 						"     input(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
+						"          AgencyID as string,",
+						"          AgencyName as string",
 						"     ),",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -1075,8 +1098,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_dl_TitleMaster')]",
-				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYCPayrollTITLEMD')]"
+				"[concat(variables('factoryId'), '/datasets/ds_dl_AgencyMaster')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_NYCPayrollAgencyMD')]"
 			]
 		}
 	]

@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorageData'"
 		},
-		"AzureSqlDatabase1_connectionString": {
+		"AzureSqlDatabase1_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
 		"AzureSqlDatabase2_password": {
 			"type": "secureString",
@@ -22,6 +22,18 @@
 		"AzureDataLakeStorageData_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsnycpayrollantong.dfs.core.windows.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlsrvnycpayrol.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "db_nycpayroll"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "gavexe"
 		},
 		"AzureSqlDatabase2_properties_typeProperties_server": {
 			"type": "string",
@@ -65,14 +77,23 @@
 					"AzureDataLakeStorageData_accountKey": {
 						"value": "[parameters('AzureDataLakeStorageData_accountKey')]"
 					},
-					"AzureSqlDatabase1_connectionString": {
-						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					"AzureSqlDatabase1_password": {
+						"value": "[parameters('AzureSqlDatabase1_password')]"
 					},
 					"AzureSqlDatabase2_password": {
 						"value": "[parameters('AzureSqlDatabase2_password')]"
 					},
 					"AzureDataLakeStorageData_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorageData_properties_typeProperties_url')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
 					},
 					"AzureSqlDatabase2_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlDatabase2_properties_typeProperties_server')]"
