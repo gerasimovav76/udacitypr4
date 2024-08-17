@@ -1,0 +1,23 @@
+{
+	"name": "ds_synapsePayrollSummary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageData",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "dirstaging",
+				"fileSystem": "adlsnycpayroll-anton-g"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
