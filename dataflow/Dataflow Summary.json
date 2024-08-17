@@ -102,7 +102,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"SQLDB2020 union(byName: true)~> union1",
+				"SQLDB2020, source1 union(byName: true)~> union1",
 				"union1 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> filter1",
 				"filter1 derive(TotalPaid = RegularGrossPaid + TotalOTPaid + TotalOtherPay) ~> TotalPaid",
 				"TotalPaid aggregate(groupBy(AgencyName,",
