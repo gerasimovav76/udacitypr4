@@ -49,7 +49,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> SQLDB2021",
 				"SQLDB2020, SQLDB2021 union(byName: true)~> union1",
-				"union1 filter(ERROR_FUNCTION('')) ~> filter1"
+				"union1 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> filter1"
 			]
 		}
 	}
