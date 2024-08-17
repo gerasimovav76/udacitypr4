@@ -29,6 +29,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     dataflow_param_fiscalyear as integer (2020)",
+				"}",
 				"source(output(",
 				"          FiscalYear as integer,",
 				"          PayrollNumber as integer,",
@@ -80,7 +83,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source2",
 				"source1, source2 union(byName: true)~> union1",
-				"union1 filter(ERROR_FUNCTION('')) ~> filter1"
+				"union1 filter(toInteger(FiscalYear) >= $dataflow_param_fiscalyear) ~> filter1"
 			]
 		}
 	}
