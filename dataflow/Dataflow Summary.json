@@ -42,7 +42,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> SQLDB2021",
-				"SQLDB2020 union(byName: true)~> union1"
+				"SQLDB2020, SQLDB2021 union(byName: true)~> union1"
 			]
 		}
 	}
