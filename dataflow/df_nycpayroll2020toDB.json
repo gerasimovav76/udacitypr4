@@ -24,7 +24,7 @@
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          FiscalYear as string,",
+				"          FiscalYear as integer,",
 				"          PayrollNumber as string,",
 				"          AgencyCode as string,",
 				"          AgencyName as string,",
